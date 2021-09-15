@@ -10,12 +10,21 @@
 
   3. 使用`console.start('::1', 6666)`代码启动.
 
-  4. 使用在终端使用命令`nc localhost 666`进行连接
+  4. 使用在终端使用命令`nc localhost 6666`进行连接
 
-## 演示
+## 内部演示
+
+  以下内容仅做参考, 实际功能以后实际版本迭代为主.
+
+
+```lua
+local console = require "debug.console"
+
+console.start("localhost", 6666)
+```
 
 ```shell
-[candy@MacBookPro:~] $ nc localhost 9999
+[candy@MacBookPro:~] $ nc localhost 6666
 
 Welcome! This is cfadmin Debug Console:
 
