@@ -1,0 +1,2 @@
+# debug
+cfadmin debug
