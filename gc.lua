@@ -6,18 +6,25 @@ local USAGE = [[
 
 gc [command] [args]:
 
-    [count]   -  Let the garbage collector report memory usage.
+  [count]   -  Let the garbage collector report memory usage.
 
-    [collect] -  Let the garbage collector do a full garbage collection.
+  [collect] -  Let the garbage collector do a full garbage collection.
 
-    [start]   -  Let the garbage collector (re)start.
+  [start]   -  Let the garbage collector (re)start.
 
-    [stop]    -  Let the garbage collector stop working.
+  [stop]    -  Let the garbage collector stop working.
 
-    [mode]    -  Let the garbage change work mode(`incremental` or `generational`).
+  [mode]    -  Let the garbage change work mode(`incremental` or `generational`).
 ]]
 
 local cmd = {}
+
+cmd.mode = [[
+
+collectgarbage response :
+
+  change to '%s' mode.
+]]
 
 cmd.count = [[
 
@@ -58,7 +65,9 @@ collectgarbage response :
 
 local function calc_memory()
   local size = collectgarbage("count")
-  if size > 1024 then
+  if size > 1024 * 128 then
+    size = string.format("%.4f/GB", size / 1024 / 1024)
+  elseif size > 1024 then
     size = string.format("%.4f/MB", size / 1024)
   else
     size = string.format("%.4f/KB", size)
@@ -66,9 +75,20 @@ local function calc_memory()
   return size
 end
 
-return function (action, ...)
+return function (action, mode, ...)
+  -- 计算内存占用
   if action == 'count' then
     return string.format(cmd[action], calc_memory())
+  end
+  -- 变更运行模式
+  if action == 'mode' then
+    if mode == 'incremental' or mode == 'generational' then
+      local v1, v2 = ...
+      collectgarbage(mode, math.tointeger(v1), math.tointeger(v2))
+    else
+      return "\r\nYou can change to `incremental` or `generational` mode.\r\n"
+    end
+    return string.format(cmd[action], mode)
   end
   -- 完成一次完整的垃圾收集
   if action == "collect" then
