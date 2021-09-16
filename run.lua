@@ -19,6 +19,9 @@ cmd.loaderr = [[
 error: %s
 ]]
 
+cmd.run = [[
+OK]]
+
 return function (filename, ...)
   if not filename then
     return USAGE
@@ -28,4 +31,5 @@ return function (filename, ...)
     return string.format(cmd.loaderr, errinfo)
   end
   cf.fork(f, ...)
+  return cmd.run
 end
