@@ -10,17 +10,21 @@ local USAGE = [[
 
 Welcome! This is cfadmin Debug Console:
 
-  gc     -  can run/stop/modify/count garbage collectors.
+  gc     -  Can run/stop/modify/count garbage collectors.
 
   run    -  Execute the lua script like `main` coroutine.
 
--> ]]
+  dump   -  Prints more information about the specified data structure. 
+
+>>> ]]
 
 local command = {}
 
 command['gc'] = require "debug.gc"
 
 command['run'] = require "debug.run"
+
+command['dump'] = require "debug.dump"
 
 -- 解析客户端请求
 local function command_split(cmd)
@@ -49,7 +53,7 @@ local function dispatch(ip, port)
       local f = command[cmd]
       if f then
         client:send(f(table.unpack(args)))
-        client:send("\r\n-> ")
+        client:send("\r\n>>> ")
       else
         client:send(USAGE)
       end
