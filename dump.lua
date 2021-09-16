@@ -17,13 +17,12 @@ dump [command] [key1] [key1] [keyN] :
    2. dump global string
 ]]
 
-local function DUMPALL(name, ROOT)
+local function DUMPALL(name, root)
   local KSIZE,  T_USERDATA, T_STRING, T_FUNCTION, T_NUMBER, T_THREAD, T_BOOLEAN, T_TABLE = 0, 0, 0, 0, 0, 0, 0, 0
   local counter = {}
   local content = {}
-  for k, v in pairs(ROOT) do
+  for k, v in pairs(root) do
     KSIZE = KSIZE + 1
-    local key = tostring(k)
     local value = nil
     if type(v) == 'string' then
       T_STRING = T_STRING + 1
@@ -52,7 +51,11 @@ local function DUMPALL(name, ROOT)
       T_TABLE = T_TABLE + 1
       value = tostring(v)
     end
-    content[#content+1] = '[' .. key .. ']' .. ' = ' .. value
+    if type(k) == 'number' then
+      content[#content+1] = "[" .. k .. "]" .. ' = ' .. value
+    else
+      content[#content+1] = "['" .. tostring(k) .. "']" .. ' = ' .. value
+    end
   end
   counter[#counter+1] = "total keys count: " .. KSIZE
   counter[#counter+1] = T_STRING > 0 and ("string value count: " .. T_STRING) or nil
@@ -93,20 +96,23 @@ return function (name, ...)
   if not name then
     return USAGE
   end
+  name = name:lower()
   local ROOT
-  if name == 'global' then
+  if name == 'global' or name == 'g' then
+    name = 'global'
     ROOT = _ENV or _G
-  elseif name == 'registery' then
+  elseif name == 'registery' or name == 'r' then
+    name = 'registery'
     ROOT = debug.getregistry ()
   else
     local t = package.loaded[name]
-    if not t then
-      return "\r\nCan't import this package.\r\n"
+    if t == nil then
+      return "\r\nNot import this package yet.\r\n"
     end
     ROOT = t
   end
   if type(ROOT) ~= 'table' then
-    return tostring(ROOT)
+    return DUMPVALUE(name, ROOT)
   end
   local args
   local argv = select("#", ...)
@@ -114,7 +120,7 @@ return function (name, ...)
     args = {...}
   end
   for level = 1, argv do
-    local tab = ROOT[args[level]]
+    local tab = ROOT[args[level]] or ROOT[tonumber(args[level])] or ROOT[math.tointeger(args[level])]
     if type(tab) ~= 'table' then
       return DUMPVALUE(args[level], tab)
     end
