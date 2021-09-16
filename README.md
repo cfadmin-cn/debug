@@ -14,7 +14,7 @@
 
 ## 内部演示
 
-  以下内容仅做参考, 实际功能以后实际版本迭代为主.
+  以下内容仅做参考, 实际功能以后续版本迭代为主.
 
 
 ```lua
@@ -28,29 +28,11 @@ console.start("localhost", 6666)
 
 Welcome! This is cfadmin Debug Console:
 
-  gc     -  can run/stop/modify/count garbage collectors.
+  gc     -  Can run/stop/modify/count garbage collectors.
 
   run    -  Execute the lua script like `main` coroutine.
 
--> gc
+  dump   -  Prints more information about the specified data structure. 
 
-gc [command] [args]:
-
-    [count]   -  Let the garbage collector report memory usage.
-
-    [collect] -  Let the garbage collector do a full garbage collection.
-
-    [start]   -  Let the garbage collector (re)start.
-
-    [stop]    -  Let the garbage collector stop working.
-
-    [mode]    -  Let the garbage change work mode(`incremental` or `generational`).
-
--> run
-
-Run [command] :
-
-  [filename] - Execute lua script file.(e.g: script/test.lua)
-
-->
+>>> 
 ```
