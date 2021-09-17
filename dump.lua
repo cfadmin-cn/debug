@@ -96,7 +96,6 @@ return function (name, ...)
   if not name then
     return USAGE
   end
-  name = name:lower()
   local ROOT
   if name == 'global' or name == 'g' then
     name = 'global'
