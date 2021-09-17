@@ -20,16 +20,19 @@ Welcome! This is cfadmin Debug Console:
 
 local command = {}
 
+-- GC 命令行处理
 command['gc'] = require "debug.gc"
 
+-- RUN 命令行处理
 command['run'] = require "debug.run"
 
+-- DUMP 命令处理
 command['dump'] = require "debug.dump"
 
 -- 解析客户端请求
 local function command_split(cmd)
   local cmds = {}
-  string.gsub(cmd, "[^ \r\n]+", function (s)
+  string.gsub(cmd, "[^   \t\r\n]+", function (s)
     cmds[#cmds+1] = s
   end)
   return table.remove(cmds, 1), cmds
