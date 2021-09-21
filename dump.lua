@@ -64,8 +64,8 @@ local function DUMPALL(name, root)
   counter[#counter+1] = T_FUNCTION > 0 and ("function value count: " .. T_FUNCTION) or nil
   counter[#counter+1] = T_USERDATA > 0 and ("usedata value count: " .. T_USERDATA) or nil
   counter[#counter+1] = T_TABLE > 0 and ("table value count: " .. T_TABLE) or nil
-  local tab = {"\r\ncounter: \r\n  " .. table.concat(counter, '\r\n  '), name .. "{\r\n  " .. table.concat(content, "\r\n  ") .. "\r\n}"}
-  return table.concat(tab, "\r\n\r\n") .. "\r\n"
+  local tab = { '\r\n' .. name .. "{\r\n  " .. table.concat(content, "\r\n  ") .. "\r\n}", "counter: \r\n  " .. table.concat(counter, '\r\n  ')}
+  return table.concat(tab, "\r\n\r\n") .. "\r\n\r\nDown."
 end
 
 local function DUMPVALUE(k, v)
@@ -89,7 +89,7 @@ local function DUMPVALUE(k, v)
   else
     v = tostring(v)
   end
-  return "\r\n" .. "['" .. k .. "']" .. " = " .. v .. "\r\n"
+  return "\r\n" .. "['" .. k .. "']" .. " = " .. v .. "\r\n\r\nDown."
 end
 
 return function (name, ...)

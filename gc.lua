@@ -30,7 +30,7 @@ cmd.count = [[
 
 collectgarbage response :
 
-  currunt memory size: %s
+  current memory size: %s
 ]]
 
 cmd.collect = [[
