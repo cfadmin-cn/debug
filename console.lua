@@ -39,42 +39,51 @@ local function command_split(cmd)
 end
 
 -- 客户端处理事件
-local function dispatch(ip, port)
-  assert(server:listen(ip, port, function (fd, ipaddr)
-    local client = tcp:new():set_fd(fd)
-    client:send(USAGE)
-    while true do
-      local cmd = client:readline("[\r]?\n", true)
-      if not cmd then
-        break
-      end
-      local args
-      cmd, args = command_split(cmd)
-      if cmd then
-        cmd = cmd:lower()
-      end
-      local f = command[cmd]
-      if f then
-        client:send(f(table.unpack(args)))
-        client:send("\r\n>>> ")
-      else
-        client:send(USAGE)
-      end
+local function dispatch(fd)
+  local client = tcp:new():set_fd(fd)
+  client:send(USAGE)
+  while true do
+    local cmd = client:readline("[\r]?\n", true)
+    if not cmd then
+      break
     end
-    return client:close()
-  end))
-  return cf.wait()
+    local args
+    cmd, args = command_split(cmd)
+    if cmd then
+      cmd = cmd:lower()
+    end
+    local f = command[cmd]
+    if f then
+      client:send(f(table.unpack(args)))
+      client:send("\r\n>>> ")
+    else
+      client:send(USAGE)
+    end
+  end
+  return client:close()
 end
 
 local debug = {}
 
----comment 启动服务
+---comment 启动`IP`与`Port`服务
 ---@param ip string    @监听地址
 ---@param port integer @监听端口
 function debug.start(ip, port)
   assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
-  server = tcp:new()
-  return cf.fork(dispatch, ip, port)
+  return cf.fork(function ()
+    server = tcp:new()
+    assert(server:listen(ip, port, dispatch))
+  end)
+end
+
+---comment 启动`Unix Domain Socket`监听服务
+---@param unix_domain_path string @启动环境
+function debug.startx(unix_domain_path)
+  assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
+  return cf.fork(function ()
+    server = tcp:new()
+    assert(server:listen_ex(unix_domain_path, true, dispatch))
+  end)
 end
 
 return debug

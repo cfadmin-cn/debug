@@ -8,6 +8,8 @@ gc [command] [args]:
 
   [count]   -  Let the garbage collector report memory usage.
 
+  [step]    -  Let the garbage collector do a step garbage collection.
+
   [collect] -  Let the garbage collector do a full garbage collection.
 
   [start]   -  Let the garbage collector (re)start.
@@ -31,6 +33,17 @@ cmd.count = [[
 collectgarbage response :
 
   current memory size: %s
+]]
+
+cmd.step = [[
+
+collectgarbage response :
+
+  before collectgarbage: %s
+
+  after  collectgarbage: %s
+
+  gc collect time: %.4f/s
 ]]
 
 cmd.collect = [[
@@ -90,8 +103,17 @@ return function (action, mode, ...)
     end
     return string.format(cmd[action], mode)
   end
+  -- 完成一次单步的垃圾收集
+  if action == 'step' then
+    local s = sys.now()
+    local before = calc_memory()
+    collectgarbage("step", 0)
+    local after = calc_memory()
+    local e = sys.now()
+    return string.format(cmd[action], before, after, e - s)
+  end
   -- 完成一次完整的垃圾收集
-  if action == "collect" then
+  if action == 'collect' then
     local s = sys.now()
     local before = calc_memory()
     collectgarbage("collect")
