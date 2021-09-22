@@ -16,6 +16,8 @@ Welcome! This is cfadmin Debug Console:
 
   dump   -  Prints more information about the specified data structure. 
 
+  stat   -  Process usage data analysis report.
+
 >>> ]]
 
 local command = {}
@@ -28,6 +30,9 @@ command['run'] = require "debug.run"
 
 -- DUMP 命令处理
 command['dump'] = require "debug.dump"
+
+-- STAT 命令处理
+command['stat'] = require "debug.stat"
 
 -- 解析客户端请求
 local function command_split(cmd)
