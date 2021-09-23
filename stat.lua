@@ -5,6 +5,8 @@ local collectgarbage = collectgarbage
 
 local fmt = string.format
 
+local mrandom = math.random
+
 local bu, bk = 0, 0
 local u, k = "0.0", "0.0"
 
@@ -24,9 +26,9 @@ stat [command] :
 
 local CPU = [[
 
-CPU(User):%s%%
+CPU(User): %s%%
 
-CPU(Kernel):%s%%
+CPU(Kernel): %s%%
 ]]
 
 local MEM = [[
@@ -47,25 +49,27 @@ Soft Page Faults: %d
 
 local function check_wrap(cpu)
   local radio = cpu * 0.01
-  if radio < 1 then
+  if radio <= 1 then
     return cpu
   end
-  return cpu * (math.random(4, 7) * 0.1) * (radio // 1)
+  return cpu * (mrandom(4, 6) * 0.1) * radio
 end
 
-cf.at(1, function ()
+cf.at(0.5, function ()
   local info = sys.usage()
   if not info then
     return
   end
-  local uradio, kradio = (info.utime - bu) * 1e2, (info.ktime - bk) * 1e2
+  local utime, ktime = info.utime, info.ktime
+  local uradio, kradio = (utime - bu) * 100, (ktime - bk) * 100
   if uradio > 0.09 then
     u = fmt("%.1f", check_wrap(uradio))
   end
   if kradio > 0.09 then
     k = fmt("%.1f", check_wrap(kradio))
   end
-  bu, bk = info.utime, info.ktime
+  bu, bk = utime, ktime
+  -- print(u, k, bu, bk)
   -- TODO
 end)
 
