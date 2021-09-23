@@ -64,9 +64,13 @@ cf.at(0.5, function ()
   local uradio, kradio = (utime - bu) * 100, (ktime - bk) * 100
   if uradio > 0.09 then
     u = fmt("%.1f", check_wrap(uradio))
+  else
+    k = '0.0'
   end
   if kradio > 0.09 then
     k = fmt("%.1f", check_wrap(kradio))
+  else
+    k = '0.0'
   end
   bu, bk = utime, ktime
   -- print(u, k, bu, bk)
