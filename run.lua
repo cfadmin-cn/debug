@@ -101,7 +101,7 @@ return function (filename, trace)
     end
 
     -- 计算运行耗时.
-    list[#list] = fmt("\r\nTotal Running Time: %.3f\r\nDone.", e - s)
+    list[#list == 0 and 1 or #list + 1] = fmt("\r\nTotal Running Time: %.3f\r\nDone.", e - s)
 
     cf.wakeup(co, table.concat(list, "\r\n"))
   end)
