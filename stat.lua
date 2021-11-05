@@ -5,8 +5,6 @@ local collectgarbage = collectgarbage
 
 local fmt = string.format
 
-local mrandom = math.random
-
 local u, k = '0.0', '0.0'
 local utime, ktime = nil, nil
 
@@ -47,7 +45,7 @@ Hard Page Faults: %d
 Soft Page Faults: %d
 ]]
 
-cf.at(0.5, function ()
+cf.at(1, function ()
   local info = sys.usage()
   if not info then
     return
