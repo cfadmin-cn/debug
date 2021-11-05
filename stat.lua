@@ -19,7 +19,6 @@ stat [command] :
   [page]   -   `hard_page_fault` and `soft_page_fault` of the current process.
 
   [all]    -   Return all of the above information.
-
 ]]
 
 local CPU = [[
