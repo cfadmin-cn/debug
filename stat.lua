@@ -7,8 +7,8 @@ local fmt = string.format
 
 local mrandom = math.random
 
-local bu, bk = 0, 0
-local u, k = "0.0", "0.0"
+local u, k = '0.0', '0.0'
+local utime, ktime = nil, nil
 
 local USAGE = [[
 
@@ -26,9 +26,9 @@ stat [command] :
 
 local CPU = [[
 
-CPU(User): %s%%
+CPU(User): %2.2f%%
 
-CPU(Kernel): %s%%
+CPU(Kernel): %2.2f%%
 ]]
 
 local MEM = [[
@@ -47,34 +47,20 @@ Hard Page Faults: %d
 Soft Page Faults: %d
 ]]
 
-local function check_wrap(cpu)
-  local radio = cpu * 0.01
-  if radio <= 1 then
-    return cpu
-  end
-  return cpu * (mrandom(4, 6) * 0.1) * radio
-end
-
 cf.at(0.5, function ()
   local info = sys.usage()
   if not info then
     return
   end
-  local utime, ktime = info.utime, info.ktime
-  local uradio, kradio = (utime - bu) * 100, (ktime - bk) * 100
-  if uradio > 0.09 then
-    u = fmt("%.1f", check_wrap(uradio))
+  local su, sk = info.utime, info.ktime
+  if not utime or not ktime then
+    u, k = su, sk
+    utime, ktime = su, sk
   else
-    k = '0.0'
+    u, k = (su - utime) * 1e2, (sk - ktime) * 1e2
+    utime, ktime = su, sk
   end
-  if kradio > 0.09 then
-    k = fmt("%.1f", check_wrap(kradio))
-  else
-    k = '0.0'
-  end
-  bu, bk = utime, ktime
-  -- print(u, k, bu, bk)
-  -- TODO
+  -- print(u, utime, k, ktime)
 end)
 
 local function calc_usage(size)
