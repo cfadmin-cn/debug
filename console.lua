@@ -1,6 +1,3 @@
--- 注意: 不可运行在多进程模式下.
-assert(not worker, "[Lua Debug Console Error]: Only available in single process mode.")
-
 local cf = require "cf"
 local tcp = require "internal.TCP"
 
@@ -74,7 +71,8 @@ local debug = {}
 ---@param ip string    @监听地址
 ---@param port integer @监听端口
 function debug.start(ip, port)
-  assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
+  assert(not worker, "[Lua Debug Console Error]: Only available in single process mode.")
+  server = assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
   return cf.fork(function ()
     server = tcp:new()
     assert(server:listen(ip, port, dispatch))
@@ -84,7 +82,7 @@ end
 ---comment 启动`Unix Domain Socket`监听服务
 ---@param unix_domain_path string @启动环境
 function debug.startx(unix_domain_path)
-  assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
+  server = assert(not server, "[Lua Debug Console Error]: Attempted to start multiple debug console.")
   return cf.fork(function ()
     server = tcp:new()
     assert(server:listen_ex(unix_domain_path, true, dispatch))
