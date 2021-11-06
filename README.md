@@ -235,9 +235,34 @@ Done.
 >>>
 ```
 
-  从这里可以看到, 语法就是`keyname` + `空格`的方式.
+  从示例可以看出语法就是`keyname` + `空格`的方式, 使用者熟练掌握后可以快速定位.
 
-  这样也方便使用者可以快速定位, 增加运行时定位问题的一些能力.
+  那如果我指向定位`require`过的包, 应该怎么做呢？
+
+```bash
+>>> dump cf
+
+cf{
+  ['yield'] = function: 0x7fbc0f609360(lualib/cf/init.lua:35)
+  ['at'] = function: 0x7fbc0f6095d0(lualib/cf/init.lua:30)
+  ['sleep'] = function: 0x7fbc0f609780(lualib/cf/init.lua:46)
+  ['wakeup'] = function: 0x7fbc0f609970(lualib/cf/init.lua:75)
+  ['timeout'] = function: 0x7fbc0f609570(lualib/cf/init.lua:22)
+  ['fork'] = function: 0x7fbc0f609940(lualib/cf/init.lua:68)
+  ['wait'] = function: 0x7fbc0f609910(lualib/cf/init.lua:61)
+  ['self'] = function: 0x7fbc0f609820(lualib/cf/init.lua:56)
+  ['join'] = function: 0x7fbc0f609a10(lualib/cf/init.lua:93)
+}
+
+counter:
+  total keys count: 9
+  function value count: 9
+
+Done.
+>>>
+```
+
+  这能提供使用者快速定位问题的能力, 也可以简化开发者的快速上手难度.
 
 ### 3. 运行调试代码
 
@@ -349,6 +374,12 @@ gc [command] [args]:
 
   运行期间的垃圾收集器很敏感! 除非十分清除自己在干什么, 否则请不要随意干预它.
 
+## 补充说明
+
+  上述的演示功能只是冰山一角, 并且由于篇幅与其它原因我们无法在此给大家全部展示更多的特性.
+  
+  但是通过开发者合理的组合与自行编写的脚本, 完全可以完成灰度测试、热修复、热更新、在线调试等功能.
+
 ## 获取帮助
 
-  有其它任何疑问, 请到我们的框架交流群内咨询.
+  如果还有其它任何的疑问, 请到我们的交流群内咨询.
