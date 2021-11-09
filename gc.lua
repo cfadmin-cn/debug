@@ -124,14 +124,18 @@ return function (action, mode, ...)
   -- 停止垃圾收集器
   if action == 'stop' then
     local status = collectgarbage("isrunning") and "Running" or "Stoped"
-    collectgarbage('stop')
-    return string.format(cmd[action], status, collectgarbage("isrunning") and "Running" or "Stoped")
+    if status == "Running" then
+      collectgarbage('stop')
+    end
+    return string.format(cmd[action], status, "Stoped")
   end
   -- 启动垃圾收集器
   if action == 'start' then
     local status = collectgarbage("isrunning") and "Running" or "Stoped"
-    collectgarbage('restart')
-    return string.format(cmd[action], status, collectgarbage("isrunning") and "Running" or "Stoped")
+    if status == "Stoped" then
+      collectgarbage('restart')
+    end
+    return string.format(cmd[action], status, "Running")
   end
   -- USAGE
   return string.format(USAGE)
