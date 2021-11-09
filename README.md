@@ -14,7 +14,7 @@
 
   1. 监听端口 - `console.start("127.0.0.1", 6666)`
 
-  2. 监听文件 - `console.start("loca.sock")`
+  2. 监听文件 - `console.start("local.sock")`
 
   第`1`种只能支持单进程模式, 第`2`种可自行配置文件名后支持多进程模式.
 
@@ -57,7 +57,7 @@ Welcome! This is cfadmin Debug Console:
 
 ### 1. 查看进程状态
 
-  我们运行`stat`, 然后会输出一些使用帮助. 
+  我们尝试运行`stat`命令来获得一些使用帮助: 
 
 ```bash
 >>> stat
@@ -75,7 +75,7 @@ stat [command] :
 >>>
 ```
 
-  使用`stat all`则可以输出所有内容. 如下所示:
+  现在根据提示使用`stat all`则可以输出所有内容. 如下所示:
 
 ```bash
 >>> stat all
@@ -96,8 +96,6 @@ Soft Page Faults: 739
 
 >>>
 ```
-
-  其它命令参数只会输出指定内容.
 
 ### 2. 查看内部数据
 
