@@ -7,29 +7,38 @@ local USAGE = [[
 
 Welcome! This is cfadmin Debug Console:
 
-  gc     -  Can run/stop/modify/count garbage collectors.
+  gc       -  Can run/stop/modify/count garbage collectors.
 
-  run    -  Execute the lua script like `main` coroutine.
+  run      -  Execute the lua script like `main` coroutine.
 
-  dump   -  Prints more information about the specified data structure. 
+  dump     -  Prints more information about the specified data structure.
 
-  stat   -  Process usage data analysis report.
+  stat     -  Process usage data analysis report.
+
+  flush    -  flush all internal cache.
 
 >>> ]]
 
+local function import(pkg)
+  return assert(package.searchers[2](pkg))()
+end
+
 local command = {}
 
--- GC 命令行处理
-command['gc'] = require "debug.gc"
+-- GC 命令处理
+command['gc'] = import "debug.gc"
 
--- RUN 命令行处理
-command['run'] = require "debug.run"
+-- RUN 命令处理
+command['run'] = import "debug.run"
 
 -- DUMP 命令处理
-command['dump'] = require "debug.dump"
+command['dump'] = import "debug.dump"
 
 -- STAT 命令处理
-command['stat'] = require "debug.stat"
+command['stat'] = import "debug.stat"
+
+-- FlUSH 命令处理
+command['flush'] = import "debug.flush"
 
 -- 解析客户端请求
 local function command_split(cmd)
